@@ -1,4 +1,5 @@
 # RSC Export (wip)
+This mini script sets up basic psd and honey pot rules, can be adjusted as time goes on
 
 /ip firewall filter
 add action=accept chain=input comment="Allow Established/Related" connection-state=established,related
