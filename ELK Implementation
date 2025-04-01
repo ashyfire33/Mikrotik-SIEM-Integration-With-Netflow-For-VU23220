@@ -1,4 +1,4 @@
-# Extracts IPs, ports, and actions from MikroTik logs for Kibana.
+# Extracts IPs, ports, and actions from MikroTik logs for Kibana. (needs work)
 
 filter {
   if [program] == "mikrotik" {
@@ -26,4 +26,8 @@ Track how many threats were blocked per hour/day.
 
 
 # Suricata Implementation example
+#MUST RUN IN IPS!!
+
 alert tcp any any -> $HOME_NET any (msg:"[SURICATA] MikroTik Port Scan Detected"; sid:100001; rev:1; content:"PORT-SCAN DETECTED";)
+alert tcp any any -> $HOME_NET any (msg:"[SURICATA] Honeypot Attack Detected"; sid:100002; rev:1; content:"HONEYPOT HIT";)
+alert ip any any -> $HOME_NET any (msg:"[SURICATA] MikroTik Blacklist Hit"; sid:100003; rev:1; content:"BLACKLISTED INPUT";)
