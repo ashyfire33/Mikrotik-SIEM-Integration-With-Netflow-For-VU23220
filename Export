@@ -1,6 +1,13 @@
 # RSC Export (wip)
 This mini script sets up basic psd and honey pot rules, can be adjusted as time goes on
 
+/system logging action
+add name=elk-remote target=remote remote-address=YOUR_ELK_SERVER remote-port=514 src-address=YOUR_ROUTER_IP
+
+/system logging
+add topics=firewall action=elk-remote
+add topics=info action=elk-remote
+
 /ip firewall filter
 add action=accept chain=input comment="Allow Established/Related" connection-state=established,related
 add action=drop chain=input comment="Drop Invalid" connection-state=invalid log=yes log-prefix="DROP INVALID"
