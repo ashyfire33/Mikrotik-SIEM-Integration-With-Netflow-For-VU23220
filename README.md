@@ -3,6 +3,8 @@
 Port Scan Detection is the firewall option used to detect port scanning and also port knocking.
 You use it to trigger logging, dynamically creating blacklist, etc.
 
+IT IS POSSIBLE FOR PSD TO GO TO SURICATA THROUGH ELK (KIBANA)
+
 Use fetch to pass to a webserver by a URL, and retrieve lists in different routers and dynamically update the firewall address lists.
 
 Resources:
