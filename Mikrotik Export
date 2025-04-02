@@ -2,7 +2,7 @@
 This mini script sets up basic psd and honey pot rules, can be adjusted as time goes on
 
 /system logging action
-add name=elk-remote target=remote remote-address=YOUR_ELK_SERVER remote-port=514 src-address=YOUR_ROUTER_IP
+add name=elk-remote target=remote remote-address=web_server remote-port=514 src-address=router_ip
 
 /system logging
 add topics=firewall action=elk-remote
@@ -11,12 +11,8 @@ add topics=info action=elk-remote
 /ip firewall filter
 add action=accept chain=input comment="Allow Established/Related" connection-state=established,related
 add action=drop chain=input comment="Drop Invalid" connection-state=invalid log=yes log-prefix="DROP INVALID"
-add action=add-src-to-address-list address-list=port_scanners address-list-timeout=1h chain=input comment="PSD Rule" log=yes log-prefix="PORT-SCAN DETECTED" protocol=tcp psd=\
-    10,3s,3,1
-add action=add-src-to-address-list address-list=honeypot_attackers address-list-timeout=1d chain=input comment="Honey Pot Rule" dst-port=2222 log=yes log-prefix="HONEYPOT HIT" \
-    protocol=tcp
-add action=drop chain=input comment="Block Port Scans" log=yes log-prefix=BLOCKED-SCANNER src-address-list=port_scanners
-add action=drop chain=input comment="Block Honey Pot hits" log=yes log-prefix="HONEYPOT BLOCKED" src-address-list=honeypot_attackers
+/ip traffic flow
+
 /system note
 set show-at-login=no
 /system routerboard settings
