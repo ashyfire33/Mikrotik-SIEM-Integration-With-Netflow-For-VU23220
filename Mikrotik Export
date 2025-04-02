@@ -1,3 +1,36 @@
+# Mikrotik Setup
+(https://forum.mikrotik.com/viewtopic.php?t=186936#)
+
+1: Upgrade and enable containers
+Download the latest ROS package as well as the container package (included in extra packages).
+Install via moving these files to the files folder and rebooting. Once rebooted make sure to upgrade ROS firmware as well (System<Routerboard<Upgrade).
+
+Once this is all installed move to setting the router to container mode.
+`/system/device-mode/update container=yes`
+You will be prompted that a reboot will happen in 5 minutes, you can also manually reboot via button or choose reboot from the System menu (easier).
+
+Next you need to create a virtual interface for the container
+`/interface/veth/add name=veth1 address=172.17.0.2/16 gateway=172.17.0.1` (ips for example)
+
+Create a bridge for the container(s)
+`/interface/bridge/add name=dockers`
+`/ip/address/add address=172.17.0.1/16 interface=dockers`
+`/interface/bridge/port add bridge=dockers interface=veth1`
+
+And finally setup a NAT rule for outgoing veth traffic
+`/ip/firewall/nat/add chain=srcnat action=masquerade src-address=172.17.0.0/16`
+
+If your router is connected to the internet, use the fetch command: (need external space)
+`/tool/fetch url=https://dl.home.pi0.io/mikrotik/docker/debian.arm64.tar dst-path=disk1/images/linux.tar`
+
+Otherwise do a local install using the follow files:
+`https://gist.github.com/pi0/a7f734a69d34cc3cb2d67ec862cfa3ac`
+
+
+
+
+
+
 # RSC Export (wip)
 This mini script sets up basic psd and honey pot rules, can be adjusted as time goes on
 
