@@ -1,17 +1,149 @@
-# Extracts IPs, ports, and actions from MikroTik logs for Kibana. (needs work)
+# Installing Elastic Stack
+https://www.elastic.co/guide/en/elastic-stack/current/installing-elastic-stack.html
+We need to install ELK, Kibana and (File)beats available at the link above.
 
-filter {
-  if [program] == "mikrotik" {
-    grok {
-      match => { "message" => "%{GREEDYDATA:rawlog}" }
-    }
-    mutate {
-      add_field => { "source_ip" => "%{[rawlog][src-address]}" }
-      add_field => { "destination_ip" => "%{[rawlog][dst-address]}" }
-      add_field => { "port" => "%{[rawlog][dst-port]}" }
-    }
-  }
-}
+** Install container on Mikrotik Device to install using Debian Package instructions **
+
+# Debian Package Installation Instructions:
+1. Download and install the public signing key
+`wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg`
+
+2. Install the apt-transport-https:
+`sudo apt-get install apt-transport-https`
+
+3. Save the repository definition to /etc/apt/sources.list.d/elastic-8.x.list:
+`echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list`
+
+4. Install the Elasticsearch Debian package:
+`sudo apt-get update && sudo apt-get install elasticsearch`
+
+# Elastic Search should be installed successfully.
+
+*Note that Elastic Search is located in /etc/elasticsearch/*
+Change directory to /etc/elasticsearch/ and ls files. The .yml file is what you would use to change options.
+To change options such as the default accessable address (by default elastic search is accessible by local host)
+
+**Leave as default for Kibana and Filebeats**
+
+# Start Elastic Search
+`systemctl start elasticsearch.service`
+*This may take a while to start (insert elevator music)*
+
+Once it is started, check the service is running properly (this will also list any errors).
+`systemctl status elasticsearch.service`
+
+# Install Kibana
+
+Since we have installed all of the dependencies already, we only really need to install Kibana.
+`apt update && install kibana`
+*(insert more elevator music)*
+
+Once Kibana is installed, there will be a few things needed to configure.
+1. Change directory to kibana (etc/kibana/)
+2. Open the .yml file (nano kibana.yml)
+
+Server host: you want the IP of the web server here (remove # at start)
+elasticsearch.hosts: leave as localhost but make sure it is https
+
+Once these are changed, you may start Kibana.
+`systemctl start kibana`
+
+Again we want to double check the service is running.
+` systemctl status kibana`
+
+# Confirm proper installation
+We want to do a netstat search to confirm the services are running and are on the correct ports.
+`netstat -tupln`
+We should see Kibana running on the web server IP using port 5601 (by default).
+We will also see entries on localhost:9200 and localhost:9300 (from elasticsearch).
+
+When these are confirmed, we should be able to load the webpage of the web server (e.g https://192.168.88.12:5601/)
+
+You will be presented with a "Welcome to Elastic" screen, choose Explore on my own.
+The next thing to configure is Filebeats.
+
+# Install and Configure Filebeats
+Choose "Add your data" on the Elastic dashboard.
+Scroll till you find "NetFlow/IPFIX Collector", choose this option then switch to the Deb install window.
+*This is what we will use to collect the logs from the Mikrotik device*
+
+1. Install Filebeat
+`curl -L -0 https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.15.1-amd64.deb`
+`sudo dpkg -i filebeat-7.15.1-amd64.deb` (need to test if sudo needed or not)
+
+2. Configure Filebeat
+Change directory to Filebeat (/etc/filebeat/)
+`nano filebeat.yml`
+
+We need to configure output.elasticsearch and setup.kibana
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+setup.kibana:
+  host: "https://your_webserver_ip:5601/
+
+Ensure you SAVE the file configuration!
+
+3. Enable and configure netflow module
+`sudo filebeat modules enable netflow`
+Make sure to configure the netflow module .yml
+`cd /etc/filebeat/modules.d/`
+`nano netflow.yml`
+ We will need to change the netflow_host var.
+  netflow_host: (your server ip)
+  leave the port as default (2055)
+
+**Configure username/password?**
+
+Ensure you SAVE the file configuration!
+
+4. Start filebeat
+Once this is all done, you will start filebeat.
+`sudo filebeat setup`
+*This will take a bit longer so i'll put some elevator music here.[https://youtu.be/jj0ChLVTpaA?si=WcM_qkTrYfmm-Fka]
+
+`systemctl start filebeat.service`
+We want to check the system is running.
+`systemctl status filebeat.service`
+
+Once this is all complete, we can do another netstat to check that filebeat is running.
+`netstat -tupln`
+You should have filbeat running on the web server ip on port 2055.
+
+# We should be able to start the configuration on the Mikrotik Device to get the logs being sent to Kibana.
+
+Go to IP < Traffic Flow < Targets.
+Add new.
+The Dst. Add should be the address of your server where filebeat is running. (e.g 192.168.88.12 in this example).
+Port should be 2055, Version should be IPFIX. Once all is selected, select apply.
+Exit by selecting "Ok" then choose "Close" and enable (then apply the settings).
+You should see flow traffic start coming in.
+
+Once this is all complete, go back to the elastic dashboard page opened previously (you should still have the netflow page open) and select "Check Data".
+It should relay that the module has "...successfully received from this module."
+
+If you do NOT get this message, please troubleshoot each step. (figure out specific errors laterer)
+
+Click the Netflow Overview button at the bottom under the module receive confirmation.
+This will bring you to the filebeat netflow dashboard
+
+# Filebeat Netflow Tab Explanation
+Overview:
+Conversation Partners:
+Traffic Analysis: Overview of source, destination, packets and bytes, ports, tcp flags, autonomous systems, cities etc.
+Top-N:
+Geo Location:
+Autonomous Systems:
+Flow Exporters:
+Raw Flow Records:
+
+*DHCP server running on Mikrotik giving leases.*
+
+To look at the logs on netflow, Choose the three lines at the top left, then choose the Discover tab.
+*Important components of the netflow logs are netflow.source.ipv4.address and netflow.destination.ipv4.address.
+
+
+
 
 
 # Create Visualisation in Kibana
