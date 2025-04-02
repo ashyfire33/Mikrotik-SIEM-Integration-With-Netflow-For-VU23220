@@ -7,6 +7,10 @@ You use it to trigger logging, dynamically creating blacklist, etc.
 
 AN ARM, ARM64 OR CHR DEVICE IS REQUIRED.
 
+CHR instructions
+https://help.mikrotik.com/docs/spaces/ROS/pages/48660553/CHR+ProxMox+installation
+https://www.proxmox.com/en/products/proxmox-virtual-environment/get-started
+
 Use fetch to pass to a webserver by a URL, and retrieve lists in different routers and dynamically update the firewall address lists.
 
 Resources:
