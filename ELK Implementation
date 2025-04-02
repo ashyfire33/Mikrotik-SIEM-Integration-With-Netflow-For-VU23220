@@ -142,24 +142,4 @@ Raw Flow Records:
 To look at the logs on netflow, Choose the three lines at the top left, then choose the Discover tab.
 *Important components of the netflow logs are netflow.source.ipv4.address and netflow.destination.ipv4.address.
 
-
-
-
-
-# Create Visualisation in Kibana
-Port Scan Detection (PORT-SCAN DETECTED)
-Show most scanned ports and attacking IPs.
-
-Honeypot Hits (HONEYPOT HIT)
-Identify targeted SSH/RDP brute-force attempts.
-
-Blacklisted IPs (Artillery, PSD)
-Track how many threats were blocked per hour/day.
-
-
-# Suricata Implementation example
-#MUST RUN IN IPS!!
-
-alert tcp any any -> $HOME_NET any (msg:"[SURICATA] MikroTik Port Scan Detected"; sid:100001; rev:1; content:"PORT-SCAN DETECTED";)
-alert tcp any any -> $HOME_NET any (msg:"[SURICATA] Honeypot Attack Detected"; sid:100002; rev:1; content:"HONEYPOT HIT";)
-alert ip any any -> $HOME_NET any (msg:"[SURICATA] MikroTik Blacklist Hit"; sid:100003; rev:1; content:"BLACKLISTED INPUT";)
+Sourced from: https://youtu.be/TbalIjD_GSM?si=7_BbiwaiP0Tqx31d
