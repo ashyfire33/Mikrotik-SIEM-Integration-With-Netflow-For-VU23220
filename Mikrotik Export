@@ -31,6 +31,9 @@ Otherwise do a local install using the follow files:
 
 
 
+
+
+
 # RSC Export (wip)
 This mini script sets up basic psd and honey pot rules, can be adjusted as time goes on
 
@@ -45,6 +48,10 @@ add topics=info action=elk-remote
 add action=accept chain=input comment="Allow Established/Related" connection-state=established,related
 add action=drop chain=input comment="Drop Invalid" connection-state=invalid log=yes log-prefix="DROP INVALID"
 /ip traffic flow
+
+/container/config/set ram-high=200M
+/container/set 0 logging=yes
+/container/set 0 user=0:0
 
 /system note
 set show-at-login=no
