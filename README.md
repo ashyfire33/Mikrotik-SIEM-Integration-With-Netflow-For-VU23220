@@ -2,8 +2,7 @@
 
 --WIP--
 
-Port Scan Detection is the firewall option used to detect port scanning and also port knocking.
-You use it to trigger logging, dynamically creating blacklist, etc.
+https://help.mikrotik.com/docs/spaces/ROS/pages/282132697/Syslog+with+Elasticsearch
 
 AN ARM, ARM64 OR CHR DEVICE IS REQUIRED.
 
