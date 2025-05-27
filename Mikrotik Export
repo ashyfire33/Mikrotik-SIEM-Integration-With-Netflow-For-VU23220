@@ -4,7 +4,7 @@ For our demonstration, we are using a hAP ac lite TC.
 
 ## IP Setup
 SIEM: 192.168.100.200
-Mikrotik: 192.168.100.1
+Mikrotik: 192.168.100.2
 
 # RSC Export
 - Some of this is cosmetic only such as naming schemes and the NetFlow list.
