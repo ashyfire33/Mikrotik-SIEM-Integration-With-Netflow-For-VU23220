@@ -281,7 +281,7 @@ Adjust configuration, make sure:
 Your Elastic Agent is now ready to receive NetFlow data!
 
 
-RouterOS
+## RouterOS
 (optional) Create an Interface list (for example, "NetFlow_interfaces") and add interface that need NetFlow data analysis
 
 /interface list
@@ -290,7 +290,7 @@ add name=NetFlow_interfaces
 add interface=VLAN3000 list=NetFlow_interfaces
 Configure Traffic-flow to send NetFlow data to your Elastic Agent (10.0.0.2)
 
-REQUIRED
+## REQUIRED
 /ip traffic-flow
 enabled=yes interfaces=NetFlow_interfaces
 /ip traffic-flow target
