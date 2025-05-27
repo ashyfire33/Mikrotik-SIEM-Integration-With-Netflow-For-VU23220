@@ -1,13 +1,13 @@
 # Mikrotik Setup
 Ideally you want an ARM of ARM64 device, but a similar device would work.
-n/ For our demonstration, we are using a hAP ac lite TC.
+For our demonstration, we are using a hAP ac lite TC.
 
 ## IP Setup
 SIEM: 192.168.100.200
 Mikrotik: 192.168.100.2
 
 # RSC Export
-- Some of this is cosmetic only such as naming schemes and the NetFlow list.
+- Some of this is cosmetic only such as naming schemes and the NetFlow list. They can be omitted as required.
 
 /interface bridge
 add name="Firewall Bridge"
