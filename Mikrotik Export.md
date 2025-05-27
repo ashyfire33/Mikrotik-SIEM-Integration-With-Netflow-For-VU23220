@@ -1,6 +1,6 @@
 # Mikrotik Setup
-Ideally you want an ARM of ARM64 device, but a CHR or other similar device would work.
-For our demonstration, we are using a hAP ac lite TC.
+Ideally you want an ARM of ARM64 device, but a similar device would work.
+n/ For our demonstration, we are using a hAP ac lite TC.
 
 ## IP Setup
 SIEM: 192.168.100.200
